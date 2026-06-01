@@ -35,5 +35,9 @@ build/
 ### VS Code ###
 .vscode/
 
+## reports and screenshots ##
+reports/
+Screenshots/
+
 ### Mac OS ###
 .DS_Store
