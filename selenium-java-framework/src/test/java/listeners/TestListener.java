@@ -12,7 +12,7 @@ import utils.ScreenshotUtils;
 public class TestListener implements ITestListener {
 
     private ExtentReports extent;
-    private ExtentTest test;
+    private ThreadLocal<ExtentTest> test = new ThreadLocal<ExtentTest>();
     @Override
     public void onStart(ITestContext context){
         extent = ExtentManager.getInstance();
@@ -27,21 +27,21 @@ public class TestListener implements ITestListener {
 
     @Override
     public void onTestStart(ITestResult result){
-        test = extent.createTest(result.getName());
+        test.set(extent.createTest(result.getName()));
         System.out.println("Test started "+ result.getName());
     }
 
     @Override
     public void onTestSuccess(ITestResult result){
-        test.pass("Test passed");
+        test.get().pass("Test passed");
         System.out.println("Test Success "+ result.getName());
     }
 
     @Override
     public void onTestFailure(ITestResult result){
-        test.fail(result.getThrowable());
+        test.get().fail(result.getThrowable());
         System.out.println("Test Failed "+ result.getName());
-        String ss_path = ScreenshotUtils.captureScreenshot(BaseTest.driver, result.getName());
-        test.addScreenCaptureFromPath(ss_path);
+        String ss_path = ScreenshotUtils.captureScreenshot(BaseTest.getDriver(), result.getName()+System.currentTimeMillis());
+        test.get().addScreenCaptureFromPath(ss_path);
     }
 }

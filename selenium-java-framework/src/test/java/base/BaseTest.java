@@ -9,14 +9,19 @@ import utils.DriverFactory;
 import java.time.Duration;
 
 public class BaseTest {
-    public static WebDriver driver;
+    private static ThreadLocal<WebDriver> driver = new ThreadLocal<WebDriver>();
     @BeforeClass
-    public void testSetup(){
-        driver = DriverFactory.initialiseDriver();
+    public static void testSetup(){
+        driver.set(DriverFactory.initialiseDriver());
     }
 
-    @AfterSuite
-    public void tearDown(){
-        driver.quit();
+    public static WebDriver getDriver(){
+        return driver.get();
+    }
+
+    @AfterClass
+    public static void tearDown(){
+        getDriver().quit();
+        driver.remove();
     }
 }

@@ -4,12 +4,23 @@ import api.specifications.ResponseSpecs;
 import io.restassured.response.Response;
 import models.CreateUserRequest;
 import models.CreateUserResponse;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class UserApiTest {
     UserEndpoints userapi = new UserEndpoints();
+    private static final Logger logger = LogManager.getLogger(UserApiTest.class);
+    @BeforeMethod
+    public void beforeMethod(){
+        logger.info(
+                "Thread ID: " +
+                        Thread.currentThread().getId()
+        );
+    }
     @Test
     public void validateGetUserResponse(){
         Response response = userapi.getUser(2);
